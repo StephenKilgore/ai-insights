@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="373a799a-e3e4-40c1-893f-e7b6ee998283" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ai-insights.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/config/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-analyzer/tests/test_analyzer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/config/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/scripts/cron_job.sh.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-collector/tests/test_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postgres/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/postgres/init.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbitmq/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbitmq/rabbitmq.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/app.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/config/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/tests/test_app.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2iNl9n21Rj5pSPbGaQSoxWG6EVT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data-collector/tests" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-5b207ade9991-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.17890.14" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="373a799a-e3e4-40c1-893f-e7b6ee998283" name="Changes" comment="" />
+      <created>1719338767775</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719338767775</updated>
+    </task>
+    <servers />
+  </component>
+</project>

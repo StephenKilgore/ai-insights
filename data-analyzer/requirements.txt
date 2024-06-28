@@ -1,0 +1,9 @@
+google-cloud-language
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+requests
+tweepy
+sqlalchemy
+psycopg2-binary
+pika

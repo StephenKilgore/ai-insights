@@ -1,0 +1,2 @@
+# Run the collector script every 12 hours as nonrootuser
+0 */12 * * * ai-insights python /app/collector.py >> /var/log/cron.log 2>&1

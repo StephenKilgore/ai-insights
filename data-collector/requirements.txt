@@ -1,3 +1,5 @@
 tweepy
 sqlalchemy
 requests
+psycopg2-binary
+pika

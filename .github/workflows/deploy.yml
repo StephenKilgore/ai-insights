@@ -1,61 +1,46 @@
-name: Build and Deploy to AWS EC2
+name: Build and Deploy
 
 on:
   push:
     branches:
       - master
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+  DOCKER_IMAGE_NAME: your-dockerhub-username/ai-insights
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        run: |
-          echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Build and push Docker images
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-analyzer:latest ./data-analyzer
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-collector:latest ./data-collector
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-analyzer:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-collector:latest
+          docker buildx build --push --tag $DOCKER_IMAGE_NAME:latest --tag $DOCKER_IMAGE_NAME:${{ github.sha }} --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache .
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Deploy to EC2
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Copy docker-compose file to EC2
-        run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:/path/to/your/project
-
-      - name: Deploy to AWS EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'EOF'
-            cd /path/to/your/project
-            echo "${{ secrets.GC_KEY_JSON_BASE64 }}" | base64 --decode > gc-key.json
-            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
-            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
-            export BEARER_TOKEN=${{ secrets.BEARER_TOKEN }}
-            export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/project/gc-key.json
-            docker-compose down
-            docker-compose pull ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-analyzer:latest
-            docker-compose pull ${{ secrets.DOCKER_HUB_USERNAME }}/ai-insights-collector:latest
-            docker-compose up -d
-          EOF
-
-      - name: Verify deployment
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} 'docker-compose ps'
+          args: "docker-compose -f docker-compose.yml up -d"

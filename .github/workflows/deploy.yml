@@ -27,8 +27,8 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker buildx build --tag ai-insights-collector:latest ./data-collector
-          docker buildx build --tag ai-insights-analyzer:latest ./data-analyzer
+          docker buildx build --tag ai-insights-collector:latest --load ./data-collector
+          docker buildx build --tag ai-insights-analyzer:latest --load ./data-analyzer
 
       - name: Save Docker images as tar files
         run: |

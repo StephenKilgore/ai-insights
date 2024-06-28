@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Show Docker Hub Username
-        run: echo "Docker Hub Username: ${{ secrets.DOCKER_HUB_USERNAME }}"
+        run: echo "${{ secrets.DOCKER_HUB_USERNAME }}"
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin

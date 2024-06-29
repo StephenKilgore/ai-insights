@@ -12,13 +12,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Explicitly using the latest major version
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2 # Explicitly using the latest major version
+        uses: docker/setup-buildx-action@v2
 
       - name: Cache Docker layers
-        uses: actions/cache@v3 # Explicitly using the latest major version
+        uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -32,8 +32,9 @@ jobs:
 
       - name: Save Docker images as tar files
         run: |
-          docker save ai-insights-collector:latest -o collector.tar
-          docker save ai-insights-analyzer:latest -o analyzer.tar
+          docker save ai-insights-collector:latest -o /tmp/collector.tar
+          docker save ai-insights-analyzer:latest -o /tmp/analyzer.tar
+          ls -lh /tmp/collector.tar /tmp/analyzer.tar # Verify tar files
 
       - name: Transfer images to EC2
         uses: appleboy/scp-action@master
@@ -41,8 +42,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "~/*.tar"
-          target: "~/projects/ai-insights/"
+          source: /tmp/*.tar
+          target: "~/projects/ai-insights"
 
       - name: Load Docker images on EC2
         uses: appleboy/ssh-action@master

@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker images
-        working-directory: /build
+        working-directory: build
         run: |
           docker buildx build --tag ai-insights-collector:latest --load ./data-collector
           docker buildx build --tag ai-insights-analyzer:latest --load ./data-analyzer

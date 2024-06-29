@@ -31,6 +31,7 @@ jobs:
           docker buildx build --tag ai-insights-analyzer:latest --load ./data-analyzer
 
       - name: Save Docker images as tar files
+        working-directory: /tmp
         run: |
           docker save ai-insights-collector:latest -o collector.tar
           docker save ai-insights-analyzer:latest -o analyzer.tar
@@ -41,7 +42,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "*.tar"
+          source: "/tmp/*.tar"
           target: "~/projects/ai-insights"
 
       - name: Load Docker images on EC2

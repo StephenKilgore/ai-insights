@@ -32,18 +32,34 @@ jobs:
 
       - name: Save Docker images as tar files
         run: |
-          docker save ai-insights-collector:latest -o collector.tar
-          docker save ai-insights-analyzer:latest -o analyzer.tar
-       
+          docker save ai-insights-collector:latest -o /tmp/collector.tar
+          docker save ai-insights-analyzer:latest -o /tmp/analyzer.tar
+          ls -lh /tmp/collector.tar /tmp/analyzer.tar # Verify tar files
+
+      - name: Ensure tar files exist
+        run: |
+          if [ ! -f /tmp/collector.tar ]; then
+            echo "collector.tar not found!"
+            exit 1
+          fi
+          if [ ! -f /tmp/analyzer.tar ]; then
+            echo "analyzer.tar not found!"
+            exit 1
+          fi
+
+      - name: Save SSH private key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
+          chmod 600 /tmp/private_key
 
       - name: Transfer images to EC2 using SCP
         run: |
-          scp -v -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no collector.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/collector.tar
-          scp -v -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no analyzer.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/analyzer.tar
+          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/collector.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/collector.tar
+          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/analyzer.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/analyzer.tar
 
       - name: Load Docker images on EC2 and Deploy using SSH
         run: |
-          ssh -v -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -v -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
           docker load -i ~/projects/ai-insights/collector.tar
           docker load -i ~/projects/ai-insights/analyzer.tar
           docker-compose -f ~/projects/ai-insights/docker-compose.yml up -d

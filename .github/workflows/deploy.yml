@@ -38,30 +38,27 @@ jobs:
       - name: Transfer images to EC2
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
+          host: https://ec2-54-166-37-210.compute-1.amazonaws.com/
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           source: "*.tar"
-          target: "~/"
+          target: "~/projects/ai-insights"
 
       - name: Load Docker images on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
+          host: https://ec2-54-166-37-210.compute-1.amazonaws.com/
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           script: |
-            docker load -i ~/collector.tar
-            docker load -i ~/analyzer.tar
+            docker load -i ~projects/ai-insights/collector.tar
+            docker load -i ~projects/ai-insights/analyzer.tar
 
       - name: Deploy on EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
+          host: https://ec2-54-166-37-210.compute-1.amazonaws.com/
+          username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           script: |
-            docker-compose -f ~/path-to-your/docker-compose.yml up -d
+            docker-compose -f ~/projects/ai-insights/docker-compose.yml up -d

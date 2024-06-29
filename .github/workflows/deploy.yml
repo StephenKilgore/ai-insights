@@ -57,10 +57,10 @@ jobs:
           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/collector.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/collector.tar
           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/analyzer.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/analyzer.tar
 
-      - name: Load Docker images on EC2 and Deploy using SSH
+      - name:
         run: |
           ssh -v -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
           docker load -i ~/projects/ai-insights/collector.tar
           docker load -i ~/projects/ai-insights/analyzer.tar
-          docker-compose -f ~/projects/ai-insights/docker-compose.yml up -d
+          docker compose -f ~/projects/ai-insights/docker-compose.yml up -d
           EOF

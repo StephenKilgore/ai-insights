@@ -34,7 +34,7 @@ jobs:
         run: |
           docker save ai-insights-collector:latest -o collector.tar
           docker save ai-insights-analyzer:latest -o analyzer.tar
-          ls -lh /tmp/collector.tar /tmp/analyzer.tar # Verify tar files
+       
 
       - name: Transfer images to EC2 using SCP
         run: |

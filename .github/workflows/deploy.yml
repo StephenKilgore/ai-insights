@@ -12,13 +12,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Updated to v4
+        uses: actions/checkout@v3 # Explicitly using the latest major version
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3 # Updated to v3
+        uses: docker/setup-buildx-action@v2 # Explicitly using the latest major version
 
       - name: Cache Docker layers
-        uses: actions/cache@v3 # Updated to v3
+        uses: actions/cache@v3 # Explicitly using the latest major version
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -50,18 +50,4 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            docker load -i ~/collector.tar
-            docker load -i ~/analyzer.tar
-
-      - name: Deploy on EC2
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            docker-compose -f ~/path-to-your/docker-compose.yml up -d
+          key: ${{ secrets.SSH_PRIVATE_

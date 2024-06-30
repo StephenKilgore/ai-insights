@@ -21,7 +21,9 @@ jobs:
 
       - name: Transfer project files to EC2
         run: |
-          scp -r -i /tmp/private_key -o StrictHostKeyChecking=no . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights
+          scp -r -i /tmp/private_key -o StrictHostKeyChecking=no ./data-collector ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/
+          scp -r -i /tmp/private_key -o StrictHostKeyChecking=no ./data-analyzer ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/
+          scp -i /tmp/private_key -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/docker-compose.yml
 
       - name: Transfer environment variables to EC2
         run: |

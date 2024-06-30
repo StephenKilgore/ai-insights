@@ -14,68 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate directory structure
-        run: |
-          echo "Current directory structure:"
-          ls -R
-          echo "Contents of data-collector directory:"
-          ls -R ./data-collector
-          echo "Contents of data-analyzer directory:"
-          ls -R ./data-analyzer
-          echo "Contents of root directory:"
-          ls -R ./
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build Docker images
-        run: |
-          docker buildx build --tag ai-insights-collector:latest --load ./data-collector
-          docker buildx build --tag ai-insights-analyzer:latest --load ./data-analyzer
-
-      - name: Save Docker images as tar files
-        run: |
-          docker save ai-insights-collector:latest -o /tmp/collector.tar
-          docker save ai-insights-analyzer:latest -o /tmp/analyzer.tar
-          ls -lh /tmp/collector.tar /tmp/analyzer.tar # Verify tar files
-
-      - name: Ensure tar files exist
-        run: |
-          if [ ! -f /tmp/collector.tar ]; then
-            echo "collector.tar not found!"
-            exit 1
-          fi
-          if [ ! -f /tmp/analyzer.tar ]; then
-            echo "analyzer.tar not found!"
-            exit 1
-          fi
-
       - name: Save SSH private key
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
           chmod 600 /tmp/private_key
 
-      - name: Transfer images to EC2 using SCP
+      - name: Transfer project files to EC2
         run: |
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/collector.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/collector.tar
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/analyzer.tar ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/analyzer.tar
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/docker-compose.yml
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-analyzer/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-analyzer/Dockerfile
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-collector/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-collector/Dockerfile
-          scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-collector/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-collector/collector-cron
+          scp -r -i /tmp/private_key -o StrictHostKeyChecking=no . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights
 
-      - name: Load Docker images on EC2 and Deploy using SSH
+      - name: Build and deploy on EC2
         run: |
-          ssh -v -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
-          docker load -i ~/projects/ai-insights/analyzer.tar
-          docker load -i ~/projects/ai-insights/collector.tar
-          docker compose -f ~/projects/ai-insights/docker-compose.yml up -d
+          ssh -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd ~/projects/ai-insights
+          docker-compose build
+          docker-compose up -d
           EOF

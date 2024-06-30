@@ -34,7 +34,7 @@ services:
       POSTGRES_PORT: 5432
       RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
-      RABBITMQ_HOST: ai-insights-rabbitmq
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
       RABBITMQ_PORT: 5672
       GOOGLE_APPLICATION_CREDENTIALS: /app/gc-key.json
     volumes:
@@ -54,11 +54,9 @@ services:
       POSTGRES_PORT: 5432
       RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
-      RABBITMQ_HOST: ai-insights-rabbitmq
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
       RABBITMQ_PORT: 5672
       BEARER_TOKEN: ${BEARER_TOKEN}
-    volumes:
-      - ./data-collector:/app
     depends_on:
       - ai-insights-db
       - ai-insights-rabbitmq

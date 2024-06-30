@@ -23,6 +23,22 @@ jobs:
         run: |
           scp -r -i /tmp/private_key -o StrictHostKeyChecking=no . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights
 
+      - name: Transfer environment variables to EC2
+        run: |
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > /tmp/.env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> /tmp/.env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> /tmp/.env
+          echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_USER }}" >> /tmp/.env
+          echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_PASSWORD }}" >> /tmp/.env
+          echo "BEARER_TOKEN=${{ secrets.BEARER_TOKEN }}" >> /tmp/.env
+          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}" >> /tmp/.env
+          scp -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/.env ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/.env
+
+      - name: Transfer Google Cloud credentials
+        run: |
+          echo "${{ secrets.GC_KEY_JSON_BASE64 }}" | base64 -d > /tmp/gc-key.json
+          scp -i /tmp/private_key -o StrictHostKeyChecking=no /tmp/gc-key.json ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/gc-key.json
+
       - name: Build and deploy on EC2
         run: |
           ssh -i /tmp/private_key -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'

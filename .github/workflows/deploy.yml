@@ -70,6 +70,7 @@ jobs:
           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/docker-compose.yml
           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-analyzer/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-analyzer/Dockerfile
           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-collector/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-collector/Dockerfile
+           scp -v -i /tmp/private_key -o StrictHostKeyChecking=no data-collector/Dockerfile ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/projects/ai-insights/data-collector/collector-cron
 
       - name: Load Docker images on EC2 and Deploy using SSH
         run: |

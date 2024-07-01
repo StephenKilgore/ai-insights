@@ -15,7 +15,7 @@ def wait_for_service(host, port, timeout=60):
 if __name__ == "__main__":
     postgres_ready = wait_for_service("ai-insights-db", 5432)
 
-    if rabbitmq_ready and postgres_ready:
+    if postgres_ready:
         print("All services are ready!")
     else:
         print("Some services are not available. Exiting.")

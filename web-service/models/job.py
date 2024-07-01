@@ -12,6 +12,6 @@ class JobModel(db.Model):
     rows_failed = db.Column(db.Integer, nullable=False, default=0)
     runtime = db.Column(db.Float, nullable=False, default=0.0)
 
-    collector_messages = db.relationship("Message", foreign_keys="Message.collector_job_id",
+    collector_messages = db.relationship("MessageModel", foreign_keys="MessageModel.collector_job_id",
                                       back_populates="collector_job")
-    analyzer_messages = db.relationship("Message", foreign_keys="Message.analyzer_job_id", back_populates="analyzer_job")
+    analyzer_messages = db.relationship("MessageModel", foreign_keys="MessageModel.analyzer_job_id", back_populates="analyzer_job")

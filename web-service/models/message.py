@@ -16,5 +16,5 @@ class MessageModel(db.Model):
     collector_job_id = db.Column(db.String, db.ForeignKey("jobs.id"))
     analyzer_job_id = db.Column(db.String, db.ForeignKey("jobs.id"))
 
-    collector_job = db.relationship("Job", foreign_keys=[collector_job_id], back_populates="collector_messages")
-    analyzer_job = db.relationship("Job", foreign_keys=[analyzer_job_id], back_populates="analyzer_messages")
+    collector_job = db.relationship("JobModel", foreign_keys=[collector_job_id], back_populates="collector_messages")
+    analyzer_job = db.relationship("JobModel", foreign_keys=[analyzer_job_id], back_populates="analyzer_messages")

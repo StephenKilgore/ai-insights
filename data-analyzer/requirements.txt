@@ -7,3 +7,4 @@ tweepy
 sqlalchemy
 psycopg2-binary
 pika
+python-dotenv

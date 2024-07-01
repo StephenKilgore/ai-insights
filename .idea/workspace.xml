@@ -4,29 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="373a799a-e3e4-40c1-893f-e7b6ee998283" name="Changes" comment="Initial Project Structure">
-      <change afterPath="$PROJECT_DIR$/data-analyzer/db.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-analyzer/models/message.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/collector-cron" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/db.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/models/job.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/models/message.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-collector/twitter_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="373a799a-e3e4-40c1-893f-e7b6ee998283" name="Changes" comment="fixing deploy.yml">
+      <change afterPath="$PROJECT_DIR$/web-service/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/db.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/models/job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/models/message.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/resources/job.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/resources/message.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/schemas.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-service/scripts/wait_for_services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-analyzer/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-analyzer/analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/analyzer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-analyzer/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-collector/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/data-collector/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-collector/collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collector/collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data-collector/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data-collector/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postgres/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postgres/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbitmq/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/models/job.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbitmq/rabbitmq.conf" beforeDir="false" afterPath="$PROJECT_DIR$/data-analyzer/scripts/wait_for_services.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/web-service/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-service/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/web-service/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-service/config/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-service/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/web-service/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,11 +74,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/web-service/scripts" />
       <recent name="$PROJECT_DIR$/data-collector" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/data-analyzer" />
       <recent name="$PROJECT_DIR$/data-collector/db" />
-      <recent name="$PROJECT_DIR$/data-collector/tests" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -97,35 +97,407 @@
       <option name="presentableId" value="Default" />
       <updated>1719338767775</updated>
     </task>
-    <task id="LOCAL-00001" summary="Initial Project Structure">
+    <task id="LOCAL-00008" summary="fixing deploy.yml">
       <option name="closed" value="true" />
-      <created>1719340352743</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
+      <created>1719553826806</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1719340352743</updated>
+      <updated>1719553826806</updated>
     </task>
-    <task id="LOCAL-00002" summary="Initial Project Structure">
+    <task id="LOCAL-00009" summary="fixing deploy.yml">
       <option name="closed" value="true" />
-      <created>1719365753456</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
+      <created>1719553865542</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1719365753457</updated>
+      <updated>1719553865542</updated>
     </task>
-    <task id="LOCAL-00003" summary="Initial Project Structure">
+    <task id="LOCAL-00010" summary="fixing deploy.yml">
       <option name="closed" value="true" />
-      <created>1719366056576</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
+      <created>1719554136549</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1719366056576</updated>
+      <updated>1719554136549</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00011" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719554235263</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1719554235264</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719554823658</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1719554823658</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555255232</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555255232</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555576001</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555576002</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555709043</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555709043</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555843477</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555843477</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555854357</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555854357</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719555941869</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1719555941869</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719560979424</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1719560979424</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719561204744</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1719561204744</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719561412328</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1719561412328</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719561452908</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1719561452908</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719561770252</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1719561770252</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719623083814</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1719623083814</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719623252124</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1719623252124</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719623369401</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1719623369401</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719623531114</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1719623531115</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719623908539</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1719623908540</updated>
+    </task>
+    <task id="LOCAL-00029" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719625342806</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1719625342806</updated>
+    </task>
+    <task id="LOCAL-00030" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719625662198</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1719625662198</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719625939921</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1719625939921</updated>
+    </task>
+    <task id="LOCAL-00032" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719626356678</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1719626356678</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719626602765</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1719626602765</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719626950929</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1719626950929</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719627184024</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1719627184024</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719637854538</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1719637854538</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719638109280</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1719638109280</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719638389480</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1719638389480</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719638699077</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1719638699077</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719638941401</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1719638941402</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719639094651</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1719639094651</updated>
+    </task>
+    <task id="LOCAL-00042" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719639253173</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1719639253173</updated>
+    </task>
+    <task id="LOCAL-00043" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719639474326</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1719639474326</updated>
+    </task>
+    <task id="LOCAL-00044" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719639605354</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1719639605354</updated>
+    </task>
+    <task id="LOCAL-00045" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719639831367</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1719639831367</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719640200862</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1719640200862</updated>
+    </task>
+    <task id="LOCAL-00047" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719640526368</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1719640526368</updated>
+    </task>
+    <task id="LOCAL-00048" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719640767146</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1719640767147</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719641253696</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1719641253696</updated>
+    </task>
+    <task id="LOCAL-00050" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719722120973</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1719722120981</updated>
+    </task>
+    <task id="LOCAL-00051" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719722337078</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1719722337079</updated>
+    </task>
+    <task id="LOCAL-00052" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719722371426</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1719722371427</updated>
+    </task>
+    <task id="LOCAL-00053" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719722844320</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1719722844320</updated>
+    </task>
+    <task id="LOCAL-00054" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719723168914</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1719723168915</updated>
+    </task>
+    <task id="LOCAL-00055" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719723312208</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1719723312208</updated>
+    </task>
+    <task id="LOCAL-00056" summary="fixing deploy.yml">
+      <option name="closed" value="true" />
+      <created>1719723393168</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1719723393168</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Project Structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Project Structure" />
+    <MESSAGE value="backend services complete for data collector and data analyzer" />
+    <MESSAGE value="changing deploy.yml branch" />
+    <MESSAGE value="deleting unneeded requiremnts.txt" />
+    <MESSAGE value="fixing deploy.yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing deploy.yml" />
   </component>
 </project>

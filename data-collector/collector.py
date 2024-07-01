@@ -5,12 +5,14 @@ import json
 import pika
 from datetime import datetime
 import tweepy
+from dotenv import load_dotenv
 
 from db import session, Base, engine, get_last_job_end_date
 from models.job import Job
 
 
 def init():
+    load_dotenv()
     bearer_token = os.getenv('BEARER_TOKEN')
 
     if not bearer_token:

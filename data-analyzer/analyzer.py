@@ -7,8 +7,10 @@ from db import session, Base, engine
 from models.message import Message
 from models.job import Job
 from sqlalchemy.exc import SQLAlchemyError
+from dotenv import load_dotenv
 
 def init():
+    load_dotenv()
     Base.metadata.create_all(engine)
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 

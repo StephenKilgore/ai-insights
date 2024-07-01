@@ -61,5 +61,21 @@ services:
       - ai-insights-db
       - ai-insights-rabbitmq
 
+  ai-insights-web:
+    build: ./web-service
+    container_name: ai-insights-web
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ai-insights-db
+      POSTGRES_PORT: 5432
+
+    ports:
+      - "6004:8080"
+    depends_on:
+      - ai-insights-db
+
+
 volumes:
   postgres_data:

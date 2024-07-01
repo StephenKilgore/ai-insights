@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["sh", "-c", "python scripts/wait_for_services.py && python analyzer.py"]
+CMD ["sh", "-c", "python scripts/wait_for_services.py && flask run"]

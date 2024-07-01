@@ -1,10 +1,10 @@
 from flask import  Flask
 from flask_smorest import Api
-from .resources.job import blp as JobBlueprint
-from .resources.message import blp as MessageBlueprint
+from resources.job import blp as JobBlueprint
+from resources.message import blp as MessageBlueprint
 
 
-from .db import db
+from db import db
 import os
 from dotenv import load_dotenv
 
@@ -35,8 +35,3 @@ def create_app():
     api.register_blueprint(JobBlueprint)
     api.register_blueprint(MessageBlueprint)
     return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(host="0.0.0.0", port=8080)

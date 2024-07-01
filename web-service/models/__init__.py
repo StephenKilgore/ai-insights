@@ -1,2 +1,2 @@
-from ..models.job import JobModel
-from ..models.message import MessageModel
+from models.job import JobModel
+from models.message import MessageModel

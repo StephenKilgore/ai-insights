@@ -16,6 +16,6 @@ class MessageList(MethodView):
 
 @blp.route("/message/<string:message_id>")
 class MessageList(MethodView):
-    @blp.response(200, MessageSchema(many=True))
+    @blp.response(200, MessageSchema())
     def get(self, message_id):
         return MessageModel.query.get_or_404(message_id)

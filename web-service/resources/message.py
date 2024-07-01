@@ -9,7 +9,13 @@ blp = Blueprint("messages", __name__, description="Operations on messages")
 
 
 @blp.route("/message")
-class Message(MethodView):
+class MessageList(MethodView):
     @blp.response(200, MessageSchema(many=True))
     def get(self):
         return MessageModel.query.all()
+
+@blp.route("/message/<string:message_id>")
+class MessageList(MethodView):
+    @blp.response(200, MessageSchema(many=True))
+    def get(self, message_id):
+        return MessageModel.query.get_or_404(message_id)

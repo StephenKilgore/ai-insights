@@ -1,8 +1,7 @@
-from flask import  Flask
+from flask import Flask, jsonify
 from flask_smorest import Api
 from resources.job import blp as JobBlueprint
 from resources.message import blp as MessageBlueprint
-
 
 from db import db
 import os
@@ -16,7 +15,7 @@ def create_app():
         f"@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
     )
 
-    app.config["PROPAGATE_EXCEPTION"] = True
+    app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"
@@ -29,9 +28,18 @@ def create_app():
     db.init_app(app)
     api = Api(app)
 
+    @app.route('/')
+    def home():
+        return jsonify(message="Welcome to the AI Insights API")
+
     with app.app_context():
         db.create_all()
 
     api.register_blueprint(JobBlueprint)
     api.register_blueprint(MessageBlueprint)
     return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(host="0.0.0.0", port=8080)

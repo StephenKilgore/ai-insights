@@ -51,10 +51,11 @@
             margin-top: 20px;
         }
         .tweet-box {
-            background-color: #f0f0f0;
+            border: 1px solid #ddd;
             padding: 10px;
-            border-radius: 5px;
             margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
@@ -130,23 +131,23 @@
 
         <div class="example-tweets">
             <h3>Positive Tweets</h3>
-            <div id="positive-tweets">
+            <ul id="positive-tweets">
                 <!-- Positive tweets will be inserted here -->
-            </div>
+            </ul>
         </div>
 
         <div class="example-tweets">
             <h3>Negative Tweets</h3>
-            <div id="negative-tweets">
+            <ul id="negative-tweets">
                 <!-- Negative tweets will be inserted here -->
-            </div>
+            </ul>
         </div>
 
         <div class="example-tweets">
             <h3>Neutral Tweets</h3>
-            <div id="neutral-tweets">
+            <ul id="neutral-tweets">
                 <!-- Neutral tweets will be inserted here -->
-            </div>
+            </ul>
         </div>
     </div>
 
@@ -175,12 +176,11 @@
         });
 
         function createPieChart(data) {
+            // Extract sentiment counts
             const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
-            const width = 500, height = 500, radius = Math.min(width, height) / 2;
-            const color = d3.scaleOrdinal()
-                .domain(sentimentCounts.keys())
-                .range(["#808080", "#ff9999", "#66b3ff"]); // Neutral, Negative, Positive
+            const width = 800, height = 400, radius = Math.min(width, height) / 2;
+            const color = d3.scaleOrdinal().domain(sentimentCounts.keys()).range(["#808080", "#ff9999", "#66b3ff"]); // Updated colors
 
             const svg = d3.select("#sentiment-pie")
                 .append("svg")
@@ -199,30 +199,30 @@
                 .attr('d', arc)
                 .attr('fill', d => color(d.data[0]));
 
-            const legend = svg.append("g")
-                .attr("transform", `translate(${radius + 10}, -${height / 2 - 20})`);
-
-            const categories = ["positive", "negative", "neutral"];
-            legend.selectAll("rect")
-                .data(categories)
+            // Add legend
+            const legend = svg.selectAll('.legend')
+                .data(color.domain())
                 .enter()
-                .append("rect")
-                .attr("x", 0)
-                .attr("y", (d, i) => i * 20)
-                .attr("width", 10)
-                .attr("height", 10)
-                .attr("fill", d => color(d));
+                .append('g')
+                .attr('class', 'legend')
+                .attr('transform', (d, i) => `translate(-35,${(i - 1) * 20})`);
 
-            legend.selectAll("text")
-                .data(categories)
-                .enter()
-                .append("text")
-                .attr("x", 20)
-                .attr("y", (d, i) => i * 20 + 9)
+            legend.append('rect')
+                .attr('x', width / 2 - 18)
+                .attr('width', 18)
+                .attr('height', 18)
+                .style('fill', color);
+
+            legend.append('text')
+                .attr('x', width / 2 - 24)
+                .attr('y', 9)
+                .attr('dy', '.35em')
+                .style('text-anchor', 'end')
                 .text(d => d);
         }
 
         function createLineChart(data) {
+            // Extract data for line chart
             const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
             const margin = {top: 20, right: 30, bottom: 30, left: 40},
@@ -297,11 +297,7 @@
                 .attr("y", d => y(d[0]))
                 .attr("width", d => x(d[1]))
                 .attr("height", y.bandwidth())
-                .attr("fill", d => {
-                    if (d[0] === "positive") return "#66b3ff"; // Positive
-                    if (d[0] === "negative") return "#ff9999"; // Negative
-                    return "#808080"; // Neutral
-                });
+                .attr("fill", d => color(d[0])); // Updated color based on sentiment
         }
 
         function createWordCloud(data) {
@@ -376,11 +372,7 @@
                 .attr("cx", d => x(d.sentiment_score))
                 .attr("cy", d => y(d.sentiment_magnitude))
                 .attr("r", 5)
-                .attr("fill", d => {
-                    if (d.sentiment_text === "positive") return "#66b3ff"; // Positive
-                    if (d.sentiment_text === "negative") return "#ff9999"; // Negative
-                    return "#808080"; // Neutral
-                });
+                .style("fill", d => color(d.sentiment_text)); // Updated color based on sentiment
         }
 
         function createHeatmap(data) {
@@ -444,15 +436,15 @@
             const neutralList = d3.select("#neutral-tweets");
 
             positiveTweets.forEach(tweet => {
-                positiveList.append("div").attr("class", "tweet-box").text(tweet.text);
+                positiveList.append("li").attr("class", "tweet-box").text(tweet.text);
             });
 
             negativeTweets.forEach(tweet => {
-                negativeList.append("div").attr("class", "tweet-box").text(tweet.text);
+                negativeList.append("li").attr("class", "tweet-box").text(tweet.text);
             });
 
             neutralTweets.forEach(tweet => {
-                neutralList.append("div").attr("class", "tweet-box").text(tweet.text);
+                neutralList.append("li").attr("class", "tweet-box").text(tweet.text);
             });
         }
     </script>

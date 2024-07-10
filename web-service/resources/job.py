@@ -7,13 +7,13 @@ from sqlalchemy.exc import SQLAlchemyError
 
 blp = Blueprint("jobs", __name__, description="Operations on jobs")
 
-@blp.route("/job")
+@blp.route("/api/job")
 class JobList(MethodView):
     @blp.response(200, JobSchema(many=True))
     def get(self):
         return JobModel.query.all()
 
-@blp.route("/job/<string:job_id>")
+@blp.route("/api/job/<string:job_id>")
 class Job(MethodView):
     @blp.response(200, JobSchema())
     def get(self, job_id):

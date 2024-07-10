@@ -8,13 +8,13 @@ from sqlalchemy.exc import SQLAlchemyError
 blp = Blueprint("messages", __name__, description="Operations on messages")
 
 
-@blp.route("/message")
+@blp.route("/api/message")
 class MessageList(MethodView):
     @blp.response(200, MessageSchema(many=True))
     def get(self):
         return MessageModel.query.all()
 
-@blp.route("/message/<string:message_id>")
+@blp.route("/api/message/<string:message_id>")
 class MessageList(MethodView):
     @blp.response(200, MessageSchema())
     def get(self, message_id):

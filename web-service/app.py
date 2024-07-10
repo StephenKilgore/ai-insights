@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, render_template
 from flask_smorest import Api
 from resources.job import blp as JobBlueprint
 from resources.message import blp as MessageBlueprint
@@ -30,7 +30,8 @@ def create_app():
 
     @app.route('/')
     def index():
-        return send_from_directory('templates', 'index.html')
+        return render_template('index.html')
+
 
     with app.app_context():
         db.create_all()

@@ -5,11 +5,36 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+        }
         .chart {
-            margin: 20px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+        }
+        .chart p {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+        }
+        .chart svg {
+            display: block;
+            margin: 0 auto;
         }
         .word {
-            font-family: Arial;
+            font-family: Impact;
             fill: #333;
         }
     </style>
@@ -17,12 +42,24 @@
 <body>
     <h1>Tweet Sentiment Analysis</h1>
 
-    <div id="pie-chart" class="chart"></div>
-    <div id="line-chart" class="chart"></div>
-    <div id="bar-chart" class="chart"></div>
-    <div id="word-cloud" class="chart"></div>
-    <div id="scatter-plot" class="chart"></div>
-    <div id="heatmap" class="chart"></div>
+    <div id="pie-chart" class="chart">
+        <p>Sentiment Distribution Pie Chart: Shows the proportion of positive, negative, and neutral tweets.</p>
+    </div>
+    <div id="line-chart" class="chart">
+        <p>Time Series Line Chart: Shows sentiment trends over time.</p>
+    </div>
+    <div id="bar-chart" class="chart">
+        <p>Bar Chart: Compares the frequency of different sentiment categories.</p>
+    </div>
+    <div id="word-cloud" class="chart">
+        <p>Word Cloud: Displays the most frequent words used in tweets, with different colors for different sentiment categories.</p>
+    </div>
+    <div id="scatter-plot" class="chart">
+        <p>Scatter Plot: Displays sentiment scores and magnitudes, showing the distribution and intensity of sentiments.</p>
+    </div>
+    <div id="heatmap" class="chart">
+        <p>Heatmap: Shows sentiment intensity over time or by category.</p>
+    </div>
 
     <script>
         fetch('/api/message')
@@ -165,7 +202,6 @@
                     .enter().append("text")
                     .style("font-size", d => d.size + "px")
                     .style("font-family", "Impact")
-                    .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
                     .attr("text-anchor", "middle")
                     .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
                     .text(d => d.text);
@@ -173,7 +209,7 @@
         }
 
         function createScatterPlot(data) {
-            const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            const margin = { top: 20, right: 20, bottom: 30, left: 50 },
                   width = 960 - margin.left - margin.right,
                   height = 500 - margin.top - margin.bottom;
 
@@ -183,19 +219,18 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const x = d3.scaleLinear().range([0, width]);
-            const y = d3.scaleLinear().range([height, 0]);
-
-            x.domain([-1, 1]);
-            y.domain([0, d3.max(data, d => d.magnitude)]);
+            const x = d3.scaleLinear().range([0, width]).domain([-1, 1]);
+            const y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, d => d.magnitude)]);
 
             svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
             svg.append("g").call(d3.axisLeft(y));
 
-            svg.selectAll("dot").data(data).enter().append("circle")
-                .attr("r", 5)
+            svg.selectAll("dot")
+                .data(data)
+                .enter().append("circle")
                 .attr("cx", d => x(d.score))
                 .attr("cy", d => y(d.magnitude))
+                .attr("r", 5)
                 .style("fill", d => d3.schemeCategory10[d.sentiment === "positive" ? 0 : d.sentiment === "negative" ? 1 : 2]);
         }
 
@@ -203,7 +238,41 @@
             const margin = { top: 20, right: 20, bottom: 30, left: 50 },
                   width = 960 - margin.left - margin.right,
                   height = 500 - margin.top - margin.bottom;
-            // Heatmap implementation code goes here.
+
+            const svg = d3.select("#heatmap").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleTime().range([0, width]);
+            const y = d3.scaleLinear().range([height, 0]);
+
+            x.domain(d3.extent(data, d => d.date));
+            y.domain([-1, 1]);
+
+            const colorScale = d3.scaleSequential(d3.interpolateCool)
+                .domain(d3.extent(data, d => d.magnitude));
+
+            const rectWidth = width / data.length;
+            const rectHeight = height / 3;
+
+            svg.selectAll("rect")
+                .data(data)
+                .enter().append("rect")
+                .attr("x", d => x(d.date))
+                .attr("y", d => y(d.score))
+                .attr("width", rectWidth)
+                .attr("height", rectHeight)
+                .style("fill", d => colorScale(d.magnitude))
+                .style("opacity", 0.8);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(d3.timeMonth));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
         }
     </script>
 </body>

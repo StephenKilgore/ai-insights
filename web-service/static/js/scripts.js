@@ -25,7 +25,7 @@ const color = d3.scaleOrdinal()
 function createPieChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
-    const width = 400, height = 400, radius = Math.min(width, height) / 2;
+    const width = 500, height = 500, radius = Math.min(width, height) / 2;
 
     const svg = d3.select("#sentiment-pie")
         .append("svg")
@@ -54,7 +54,7 @@ function createPieChart(data) {
         .text(d => d.data[0]);
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${-width / 2}, ${-height / 2})`);
+        .attr("transform", `translate(${width / 2 + 10}, ${-height / 2})`);
 
     legend.selectAll("rect")
         .data(sentimentCounts.keys())
@@ -79,8 +79,8 @@ function createLineChart(data) {
     const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 },
-        width = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     const x = d3.scaleTime()
         .domain(d3.extent(sentimentByDate.keys()))
@@ -120,8 +120,8 @@ function createBarChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-bar")
         .append("svg")
@@ -158,7 +158,7 @@ function createWordCloud(data) {
     const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
         .map(([word, freq]) => ({ text: word, size: freq }));
 
-    const width = 600, height = 400;
+    const width = 1000, height = 500;
 
     const layout = d3.layout.cloud()
         .size([width, height])
@@ -192,8 +192,8 @@ function createWordCloud(data) {
 
 function createScatterPlot(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-scatter")
         .append("svg")
@@ -230,8 +230,8 @@ function createScatterPlot(data) {
 
 function createHeatmap(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 1000 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-heatmap")
         .append("svg")

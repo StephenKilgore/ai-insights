@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>AI Insights - Sentiment Analysis</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -152,16 +153,19 @@
 
         fetchData().then(data => {
             // Process the data and create the charts
+            if (data && Array.isArray(data)) {
+                createPieChart(data);
+                createLineChart(data);
+                createBarChart(data);
+                createWordCloud(data);
+                createScatterPlot(data);
+                createHeatmap(data);
 
-            createPieChart(data);
-            createLineChart(data);
-            createBarChart(data);
-            createWordCloud(data);
-            createScatterPlot(data);
-            createHeatmap(data);
-
-            // Display example tweets
-            displayExampleTweets(data);
+                // Display example tweets
+                displayExampleTweets(data);
+            } else {
+                console.error("Invalid data format:", data);
+            }
         });
 
         function createPieChart(data) {
@@ -191,7 +195,7 @@
 
         function createLineChart(data) {
             // Extract data for line chart
-            const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => d.created_at);
+            const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
             const margin = {top: 20, right: 30, bottom: 30, left: 40},
                   width = 600 - margin.left - margin.right,
@@ -232,7 +236,6 @@
         }
 
         function createBarChart(data) {
-            // Extract sentiment counts
             const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
             const margin = {top: 20, right: 30, bottom: 40, left: 90},
@@ -247,7 +250,7 @@
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
             const x = d3.scaleLinear()
-                .domain([0, d3.max(sentimentCounts.values())])
+                .domain([0, d3.max(Array.from(sentimentCounts.values()))])
                 .range([0, width]);
 
             const y = d3.scaleBand()

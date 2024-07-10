@@ -14,12 +14,11 @@
         }
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            margin-bottom: 20px;
         }
         header {
             text-align: center;
@@ -38,6 +37,7 @@
         }
         .chart-container {
             padding: 20px;
+            text-align: center;
         }
         .chart-description {
             text-align: center;
@@ -49,6 +49,12 @@
             background-color: #e9f5ff;
             border-radius: 8px;
             margin-top: 20px;
+        }
+        .tweet {
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f4f4f4;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -124,23 +130,23 @@
 
         <div class="example-tweets">
             <h3>Positive Tweets</h3>
-            <ul id="positive-tweets">
+            <div id="positive-tweets">
                 <!-- Positive tweets will be inserted here -->
-            </ul>
+            </div>
         </div>
 
         <div class="example-tweets">
             <h3>Negative Tweets</h3>
-            <ul id="negative-tweets">
+            <div id="negative-tweets">
                 <!-- Negative tweets will be inserted here -->
-            </ul>
+            </div>
         </div>
 
         <div class="example-tweets">
             <h3>Neutral Tweets</h3>
-            <ul id="neutral-tweets">
+            <div id="neutral-tweets">
                 <!-- Neutral tweets will be inserted here -->
-            </ul>
+            </div>
         </div>
     </div>
 
@@ -172,8 +178,10 @@
             // Extract sentiment counts
             const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
-            const width = 800, height = 600, radius = Math.min(width, height) / 2;
-            const color = d3.scaleOrdinal().domain(sentimentCounts.keys()).range(d3.schemeCategory10);
+            const width = 400, height = 400, radius = Math.min(width, height) / 2;
+            const color = d3.scaleOrdinal()
+                            .domain(["positive", "negative", "neutral"])
+                            .range(["green", "red", "grey"]);
 
             const svg = d3.select("#sentiment-pie")
                 .append("svg")
@@ -194,20 +202,20 @@
 
             // Add legend
             const legend = svg.append("g")
-                .attr("transform", `translate(${-width / 2 + 10}, ${-height / 2 + 10})`);
+                .attr("transform", `translate(${width / 2 - 100}, ${-height / 2 + 20})`);
 
             legend.selectAll("rect")
-                .data(sentimentCounts.keys())
+                .data(color.domain())
                 .enter()
                 .append("rect")
                 .attr("x", 0)
                 .attr("y", (d, i) => i * 20)
                 .attr("width", 18)
                 .attr("height", 18)
-                .attr("fill", d => color(d));
+                .style("fill", color);
 
             legend.selectAll("text")
-                .data(sentimentCounts.keys())
+                .data(color.domain())
                 .enter()
                 .append("text")
                 .attr("x", 24)
@@ -220,7 +228,7 @@
             const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
             const margin = {top: 20, right: 30, bottom: 30, left: 40},
-                  width = 800 - margin.left - margin.right,
+                  width = 600 - margin.left - margin.right,
                   height = 400 - margin.top - margin.bottom;
 
             const x = d3.scaleTime()
@@ -261,7 +269,7 @@
             const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
             const margin = {top: 20, right: 30, bottom: 40, left: 90},
-                  width = 800 - margin.left - margin.right,
+                  width = 460 - margin.left - margin.right,
                   height = 400 - margin.top - margin.bottom;
 
             const svg = d3.select("#sentiment-bar")
@@ -291,14 +299,18 @@
                 .attr("y", d => y(d[0]))
                 .attr("width", d => x(d[1]))
                 .attr("height", y.bandwidth())
-                .attr("fill", "#69b3a2");
+                .attr("fill", d => {
+                    if (d[0] === "positive") return "green";
+                    else if (d[0] === "negative") return "red";
+                    else return "grey";
+                });
         }
 
         function createWordCloud(data) {
             const words = data.map(d => d.text.split(" ")).flat();
-            const frequency = Array.from(d3.rollup(words, v => v.length, d => d), ([word, freq]) => ({text: word, size: freq}));
+            const frequency = Array.from(d3.rollup(words, v => v.length, d => d), ([word, size]) => ({text: word, size: size}));
 
-            const width = 800, height = 400;
+            const width = 600, height = 400;
 
             const layout = d3.layout.cloud()
                 .size([width, height])
@@ -332,7 +344,7 @@
 
         function createScatterPlot(data) {
             const margin = {top: 20, right: 30, bottom: 40, left: 90},
-                  width = 800 - margin.left - margin.right,
+                  width = 460 - margin.left - margin.right,
                   height = 400 - margin.top - margin.bottom;
 
             const svg = d3.select("#sentiment-scatter")
@@ -365,12 +377,16 @@
                 .attr("cx", d => x(d.sentiment_score))
                 .attr("cy", d => y(d.sentiment_magnitude))
                 .attr("r", 5)
-                .style("fill", "#69b3a2");
+                .style("fill", d => {
+                    if (d.sentiment_text === "positive") return "green";
+                    else if (d.sentiment_text === "negative") return "red";
+                    else return "grey";
+                });
         }
 
         function createHeatmap(data) {
             const margin = {top: 20, right: 30, bottom: 40, left: 90},
-                  width = 800 - margin.left - margin.right,
+                  width = 460 - margin.left - margin.right,
                   height = 400 - margin.top - margin.bottom;
 
             const svg = d3.select("#sentiment-heatmap")
@@ -380,15 +396,15 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const heatmapData = d3.rollups(data, v => v.length, d => d.sentiment_text, d => new Date(d.created_at).getHours())
-                                  .map(([sentiment, hours]) => hours.map(([hour, count]) => ({
+            const heatmapData = Array.from(d3.rollups(data, v => v.length, d => d.created_at, d => d.sentiment_text),
+                                  ([date, sentiments]) => sentiments.map(([sentiment, count]) => ({
+                                      date: new Date(date),
                                       sentiment: sentiment,
-                                      hour: hour,
                                       intensity: count
                                   }))).flat();
 
             const x = d3.scaleBand()
-                .domain(heatmapData.map(d => d.hour))
+                .domain(heatmapData.map(d => d.date))
                 .range([0, width])
                 .padding(0.01);
 
@@ -402,10 +418,10 @@
                 .domain([0, d3.max(heatmapData, d => d.intensity)]);
 
             svg.selectAll()
-                .data(heatmapData, d => d.hour + ':' + d.sentiment)
+                .data(heatmapData, d => d.date + ':' + d.sentiment)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.hour))
+                .attr("x", d => x(d.date))
                 .attr("y", d => y(d.sentiment))
                 .attr("width", x.bandwidth())
                 .attr("height", y.bandwidth())
@@ -413,7 +429,7 @@
 
             svg.append("g")
                 .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
+                .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y-%m-%d")));
 
             svg.append("g")
                 .call(d3.axisLeft(y));
@@ -429,15 +445,15 @@
             const neutralList = d3.select("#neutral-tweets");
 
             positiveTweets.forEach(tweet => {
-                positiveList.append("li").text(tweet.text);
+                positiveList.append("div").attr("class", "tweet").text(tweet.text);
             });
 
             negativeTweets.forEach(tweet => {
-                negativeList.append("li").text(tweet.text);
+                negativeList.append("div").attr("class", "tweet").text(tweet.text);
             });
 
             neutralTweets.forEach(tweet => {
-                neutralList.append("li").text(tweet.text);
+                neutralList.append("div").attr("class", "tweet").text(tweet.text);
             });
         }
     </script>

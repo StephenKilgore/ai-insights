@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_smorest import Api
 from resources.job import blp as JobBlueprint
 from resources.message import blp as MessageBlueprint
@@ -29,8 +29,8 @@ def create_app():
     api = Api(app)
 
     @app.route('/')
-    def home():
-        return jsonify(message="Welcome to the AI Insights API")
+    def index():
+        return send_from_directory('static', 'index.html')
 
     with app.app_context():
         db.create_all()

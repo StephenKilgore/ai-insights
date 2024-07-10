@@ -202,7 +202,7 @@
                   height = 400 - margin.top - margin.bottom;
 
             const x = d3.scaleTime()
-                .domain(d3.extent(sentimentByDate.keys()))
+                .domain(d3.extent(Array.from(sentimentByDate.keys())))
                 .range([0, width]);
 
             const y = d3.scaleLinear()
@@ -255,7 +255,7 @@
 
             const y = d3.scaleBand()
                 .range([0, height])
-                .domain(sentimentCounts.keys())
+                .domain(Array.from(sentimentCounts.keys()))
                 .padding(.1);
 
             svg.append("g")
@@ -274,8 +274,7 @@
 
         function createWordCloud(data) {
             const words = data.map(d => d.text.split(" ")).flat();
-            const frequency = d3.rollup(words, v => v.length, d => d)
-                                .map(([word, freq]) => ({text: word, size: freq}));
+            const frequency = Array.from(d3.rollup(words, v => v.length, d => d), ([text, size]) => ({text, size}));
 
             const width = 600, height = 400;
 
@@ -337,7 +336,7 @@
                 .call(d3.axisLeft(y));
 
             svg.append('g')
-                .selectAll("dot")
+                .selectAll("circle")
                 .data(data)
                 .enter()
                 .append("circle")
@@ -359,12 +358,11 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const heatmapData = d3.rollups(data, v => v.length, d => d.created_at, d => d.sentiment_text)
-                                  .map(([date, sentiments]) => sentiments.map(([sentiment, count]) => ({
-                                      date: new Date(date),
-                                      sentiment: sentiment,
-                                      intensity: count
-                                  }))).flat();
+            const heatmapData = Array.from(d3.rollups(data, v => v.length, d => d.created_at.split('T')[0], d => d.sentiment_text), ([date, sentiments]) => sentiments.map(([sentiment, count]) => ({
+                date: date,
+                sentiment: sentiment,
+                intensity: count
+            }))).flat();
 
             const x = d3.scaleBand()
                 .domain(heatmapData.map(d => d.date))
@@ -372,7 +370,7 @@
                 .padding(0.01);
 
             const y = d3.scaleBand()
-                .domain(heatmapData.map(d => d.sentiment))
+                .domain(['positive', 'negative', 'neutral'])
                 .range([height, 0])
                 .padding(0.01);
 

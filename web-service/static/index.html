@@ -50,6 +50,16 @@
             border-radius: 8px;
             margin-top: 20px;
         }
+        svg {
+            width: 100% !important;
+            height: auto !important;
+        }
+        .legend {
+            font-size: 12px;
+        }
+        .legend rect {
+            stroke-width: 2;
+        }
     </style>
 </head>
 <body>
@@ -84,37 +94,37 @@
     <div class="container">
         <div class="chart-container">
             <h2 class="section-title">Sentiment Distribution</h2>
-            <div class="chart-description">This pie chart shows the proportion of positive, negative, and neutral tweets.</div>
+            <div class="chart-description">This pie chart shows the proportion of positive, negative, and neutral tweets. The distribution helps in understanding the overall sentiment towards AI.</div>
             <div id="sentiment-pie"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="section-title">Sentiment Trends Over Time</h2>
-            <div class="chart-description">This line chart shows sentiment trends over time.</div>
+            <div class="chart-description">This line chart shows sentiment trends over time. Monitoring sentiment trends can reveal changes in public opinion and identify significant events that impact sentiment.</div>
             <div id="sentiment-line"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="section-title">Sentiment Frequency</h2>
-            <div class="chart-description">This bar chart compares the frequency of different sentiment categories.</div>
+            <div class="chart-description">This bar chart compares the frequency of different sentiment categories. The frequency of each sentiment type can help prioritize areas of interest or concern.</div>
             <div id="sentiment-bar"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="section-title">Word Cloud</h2>
-            <div class="chart-description">This word cloud shows the most frequent words used in tweets, colored by sentiment category.</div>
+            <div class="chart-description">This word cloud shows the most frequent words used in tweets, colored by sentiment category. It provides a quick visual impression of the key topics and terms associated with each sentiment.</div>
             <div id="word-cloud"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="section-title">Sentiment Score and Magnitude</h2>
-            <div class="chart-description">This scatter plot displays sentiment scores and magnitudes.</div>
+            <div class="chart-description">This scatter plot displays sentiment scores and magnitudes. By examining both scores and magnitudes, we can identify the strength and polarity of public sentiment.</div>
             <div id="sentiment-scatter"></div>
         </div>
 
         <div class="chart-container">
             <h2 class="section-title">Sentiment Intensity</h2>
-            <div class="chart-description">This heatmap shows sentiment intensity over time or by category.</div>
+            <div class="chart-description">This heatmap shows sentiment intensity over time or by category. It helps to visualize the intensity and frequency of sentiments over a period.</div>
             <div id="sentiment-heatmap"></div>
         </div>
     </div>
@@ -191,6 +201,26 @@
                 .append('path')
                 .attr('d', arc)
                 .attr('fill', d => color(d.data[0]));
+
+            // Add legend
+            const legend = svg.selectAll('.legend')
+                .data(color.domain())
+                .enter().append('g')
+                .attr('class', 'legend')
+                .attr('transform', (d, i) => `translate(-35,${i * 20 - 100})`);
+
+            legend.append('rect')
+                .attr('x', width / 2 - 18)
+                .attr('width', 18)
+                .attr('height', 18)
+                .style('fill', color);
+
+            legend.append('text')
+                .attr('x', width / 2 - 24)
+                .attr('y', 9)
+                .attr('dy', '.35em')
+                .style('text-anchor', 'end')
+                .text(d => d);
         }
 
         function createLineChart(data) {
@@ -202,7 +232,7 @@
                   height = 400 - margin.top - margin.bottom;
 
             const x = d3.scaleTime()
-                .domain(d3.extent(Array.from(sentimentByDate.keys())))
+                .domain(d3.extent(sentimentByDate.keys()))
                 .range([0, width]);
 
             const y = d3.scaleLinear()
@@ -255,7 +285,7 @@
 
             const y = d3.scaleBand()
                 .range([0, height])
-                .domain(Array.from(sentimentCounts.keys()))
+                .domain(sentimentCounts.keys())
                 .padding(.1);
 
             svg.append("g")
@@ -274,13 +304,14 @@
 
         function createWordCloud(data) {
             const words = data.map(d => d.text.split(" ")).flat();
-            const frequency = Array.from(d3.rollup(words, v => v.length, d => d), ([text, size]) => ({text, size}));
+            const frequency = d3.rollup(words, v => v.length, d => d);
+            const frequencyData = Array.from(frequency, ([text, size]) => ({text, size}));
 
             const width = 600, height = 400;
 
             const layout = d3.layout.cloud()
                 .size([width, height])
-                .words(frequency)
+                .words(frequencyData)
                 .padding(5)
                 .rotate(() => ~~(Math.random() * 2) * 90)
                 .font("Impact")
@@ -336,7 +367,7 @@
                 .call(d3.axisLeft(y));
 
             svg.append('g')
-                .selectAll("circle")
+                .selectAll("dot")
                 .data(data)
                 .enter()
                 .append("circle")
@@ -358,11 +389,12 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const heatmapData = Array.from(d3.rollups(data, v => v.length, d => d.created_at.split('T')[0], d => d.sentiment_text), ([date, sentiments]) => sentiments.map(([sentiment, count]) => ({
-                date: date,
-                sentiment: sentiment,
-                intensity: count
-            }))).flat();
+            const heatmapData = d3.rollups(data, v => v.length, d => d.created_at, d => d.sentiment_text)
+                                  .map(([date, sentiments]) => sentiments.map(([sentiment, count]) => ({
+                                      date: new Date(date),
+                                      sentiment: sentiment,
+                                      intensity: count
+                                  }))).flat();
 
             const x = d3.scaleBand()
                 .domain(heatmapData.map(d => d.date))
@@ -370,7 +402,7 @@
                 .padding(0.01);
 
             const y = d3.scaleBand()
-                .domain(['positive', 'negative', 'neutral'])
+                .domain(heatmapData.map(d => d.sentiment))
                 .range([height, 0])
                 .padding(0.01);
 

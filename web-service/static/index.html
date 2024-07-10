@@ -146,7 +146,7 @@
 
     <script>
         async function fetchData() {
-            const response = await fetch('/api/message');
+            const response = await fetch('http://localhost:6004/messages');
             const data = await response.json();
             return data;
         }
@@ -275,7 +275,6 @@
         function createWordCloud(data) {
             const words = data.map(d => d.text.split(" ")).flat();
             const frequency = d3.rollup(words, v => v.length, d => d)
-                                .entries()
                                 .map(([word, freq]) => ({text: word, size: freq}));
 
             const width = 600, height = 400;

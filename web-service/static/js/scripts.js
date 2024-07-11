@@ -10,9 +10,8 @@ const color = d3.scaleOrdinal()
 
 function createPieChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
-    const total = d3.sum(Array.from(sentimentCounts.values()));
 
-    const width = 500, height = 500, radius = Math.min(width, height) / 2;
+    const width = 400, height = 400, radius = Math.min(width, height) / 2;
 
     const svg = d3.select("#sentiment-pie")
         .append("svg")
@@ -38,17 +37,17 @@ function createPieChart(data) {
         .attr('transform', d => `translate(${arc.centroid(d)})`)
         .attr('dy', '0.35em')
         .style('text-anchor', 'middle')
-        .text(d => `${d.data[0]}: ${(d.data[1] / total * 100).toFixed(1)}%`);
+        .text(d => `${d.data[0]}: ${(d.data[1] / data.length * 100).toFixed(1)}%`);
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${width / 2 + 20}, ${-height / 2})`);
+        .attr("transform", `translate(${width / 2 + 20}, ${-height / 2 + 10})`);
 
     legend.selectAll("rect")
         .data(sentimentCounts.keys())
         .enter()
         .append("rect")
         .attr("x", 0)
-        .attr("y", (d, i) => 20 + i * 20)
+        .attr("y", (d, i) => i * 20)
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", d => color(d));
@@ -58,47 +57,8 @@ function createPieChart(data) {
         .enter()
         .append("text")
         .attr("x", 20)
-        .attr("y", (d, i) => 20 + i * 20 + 9)
+        .attr("y", (d, i) => i * 20 + 9)
         .text(d => d);
-}
-
-function createWordCloud(data) {
-    const words = data.map(d => d.text.split(" ")).flat();
-    const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
-        .map(([word, freq]) => ({ text: word, size: freq }))
-        .sort((a, b) => b.size - a.size)
-        .slice(0, 20);
-
-    const width = 600, height = 400;
-
-    const layout = d3.layout.cloud()
-        .size([width, height])
-        .words(frequency)
-        .padding(5)
-        .rotate(() => ~~(Math.random() * 2) * 90)
-        .font("Impact")
-        .fontSize(d => d.size)
-        .on("end", draw);
-
-    layout.start();
-
-    function draw(words) {
-        d3.select("#word-cloud")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", `translate(${width / 2}, ${height / 2})`)
-            .selectAll("text")
-            .data(words)
-            .enter()
-            .append("text")
-            .style("font-size", d => `${d.size}px`)
-            .style("font-family", "Impact")
-            .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-            .text(d => d.text);
-    }
 }
 
 function createLineChart(data) {
@@ -177,6 +137,47 @@ function createBarChart(data) {
         .attr("width", d => x(d[1]))
         .attr("height", y.bandwidth())
         .attr("fill", d => color(d[0]));
+}
+
+function createWordCloud(data) {
+    const words = data.flatMap(d => d.text.split(" "))
+        .map(word => word.toLowerCase().replace(/[^a-zA-Z0-9]/g, ''))
+        .filter(word => word.length > 2);
+    const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20)
+        .map(([word, freq]) => ({ text: word, size: freq }));
+
+    const width = 600, height = 400;
+
+    const layout = d3.layout.cloud()
+        .size([width, height])
+        .words(frequency)
+        .padding(5)
+        .rotate(() => ~~(Math.random() * 2) * 90)
+        .font("Impact")
+        .fontSize(d => d.size * 5)  // Adjust the size multiplier as needed
+        .on("end", draw);
+
+    layout.start();
+
+    function draw(words) {
+        d3.select("#word-cloud")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", `translate(${width / 2}, ${height / 2})`)
+            .selectAll("text")
+            .data(words)
+            .enter()
+            .append("text")
+            .style("font-size", d => `${d.size}px`)
+            .style("font-family", "Impact")
+            .attr("text-anchor", "middle")
+            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+            .text(d => d.text);
+    }
 }
 
 function createScatterPlot(data) {

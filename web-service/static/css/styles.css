@@ -83,14 +83,7 @@ header h1 {
     height: 500px;
 }
 
-#sentiment-pie {
+.center-chart {
     display: flex;
     justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-#sentiment-pie svg {
-    display: block;
-    margin: auto;
 }

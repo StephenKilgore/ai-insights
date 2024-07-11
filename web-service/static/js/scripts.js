@@ -24,6 +24,7 @@ const color = d3.scaleOrdinal()
 
 function createPieChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
+    const sentimentPercentages = Array.from(sentimentCounts, ([key, value]) => [key, value / data.length * 100]);
 
     const width = 500, height = 500, radius = Math.min(width, height) / 2;
 
@@ -38,23 +39,23 @@ function createPieChart(data) {
     const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
     svg.selectAll('path')
-        .data(pie(Array.from(sentimentCounts)))
+        .data(pie(sentimentPercentages))
         .enter()
         .append('path')
         .attr('d', arc)
         .attr('fill', d => color(d.data[0]));
 
     svg.selectAll('text')
-        .data(pie(Array.from(sentimentCounts)))
+        .data(pie(sentimentPercentages))
         .enter()
         .append('text')
         .attr('transform', d => `translate(${arc.centroid(d)})`)
         .attr('dy', '0.35em')
         .style('text-anchor', 'middle')
-        .text(d => d.data[0]);
+        .text(d => `${d.data[0]}: ${d.data[1].toFixed(1)}%`);
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${width / 2 + 10}, ${-height / 2})`);
+        .attr("transform", `translate(${width / 2}, ${-height / 2})`);
 
     legend.selectAll("rect")
         .data(sentimentCounts.keys())
@@ -79,7 +80,7 @@ function createLineChart(data) {
     const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 },
-        width = 1000 - margin.left - margin.right,
+        width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const x = d3.scaleTime()
@@ -120,7 +121,7 @@ function createBarChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 1000 - margin.left - margin.right,
+        width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-bar")
@@ -158,7 +159,7 @@ function createWordCloud(data) {
     const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
         .map(([word, freq]) => ({ text: word, size: freq }));
 
-    const width = 1000, height = 500;
+    const width = 960, height = 500;
 
     const layout = d3.layout.cloud()
         .size([width, height])
@@ -192,7 +193,7 @@ function createWordCloud(data) {
 
 function createScatterPlot(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 1000 - margin.left - margin.right,
+        width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-scatter")
@@ -230,7 +231,7 @@ function createScatterPlot(data) {
 
 function createHeatmap(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 1000 - margin.left - margin.right,
+        width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-heatmap")
@@ -285,14 +286,14 @@ function displayExampleTweets(data) {
     const neutralTweets = data.filter(d => d.sentiment_text === 'neutral').slice(0, 5);
 
     positiveTweets.forEach(tweet => {
-        d3.select("#positive-tweets").append("li").attr("class", "tweet-box").text(tweet.text);
+        d3.select("#positive-tweets").append("div").attr("class", "tweet-box").text(tweet.text);
     });
 
     negativeTweets.forEach(tweet => {
-        d3.select("#negative-tweets").append("li").attr("class", "tweet-box").text(tweet.text);
+        d3.select("#negative-tweets").append("div").attr("class", "tweet-box").text(tweet.text);
     });
 
     neutralTweets.forEach(tweet => {
-        d3.select("#neutral-tweets").append("li").attr("class", "tweet-box").text(tweet.text);
+        d3.select("#neutral-tweets").append("div").attr("class", "tweet-box").text(tweet.text);
     });
 }

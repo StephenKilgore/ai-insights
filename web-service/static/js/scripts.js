@@ -24,7 +24,6 @@ const color = d3.scaleOrdinal()
 
 function createPieChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
-    const sentimentPercentages = Array.from(sentimentCounts, ([key, value]) => [key, value / data.length * 100]);
 
     const width = 500, height = 500, radius = Math.min(width, height) / 2;
 
@@ -39,30 +38,31 @@ function createPieChart(data) {
     const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
     svg.selectAll('path')
-        .data(pie(sentimentPercentages))
+        .data(pie(Array.from(sentimentCounts)))
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', d => color(d.data[0]));
+        .attr('fill', d => color(d.data[0]))
+        .each(function(d) { this._current = d; });
 
     svg.selectAll('text')
-        .data(pie(sentimentPercentages))
+        .data(pie(Array.from(sentimentCounts)))
         .enter()
         .append('text')
         .attr('transform', d => `translate(${arc.centroid(d)})`)
         .attr('dy', '0.35em')
         .style('text-anchor', 'middle')
-        .text(d => `${d.data[0]}: ${d.data[1].toFixed(1)}%`);
+        .text(d => `${d.data[0]}: ${(d.data[1] / data.length * 100).toFixed(1)}%`);
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${width / 2}, ${-height / 2})`);
+        .attr("transform", `translate(${width / 2 - 80}, ${-height / 2 + 20})`);
 
     legend.selectAll("rect")
         .data(sentimentCounts.keys())
         .enter()
         .append("rect")
-        .attr("x", 10)
-        .attr("y", (d, i) => 10 + i * 20)
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 20)
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", d => color(d));
@@ -71,8 +71,8 @@ function createPieChart(data) {
         .data(sentimentCounts.keys())
         .enter()
         .append("text")
-        .attr("x", 30)
-        .attr("y", (d, i) => 10 + i * 20 + 9)
+        .attr("x", 20)
+        .attr("y", (d, i) => i * 20 + 9)
         .text(d => d);
 }
 
@@ -80,7 +80,7 @@ function createLineChart(data) {
     const sentimentByDate = d3.rollup(data, v => d3.mean(v, d => d.sentiment_score), d => new Date(d.created_at));
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 },
-        width = 960 - margin.left - margin.right,
+        width = 600 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const x = d3.scaleTime()
@@ -93,7 +93,7 @@ function createLineChart(data) {
 
     const svg = d3.select("#sentiment-line")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", "100%")
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -121,12 +121,12 @@ function createBarChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 960 - margin.left - margin.right,
+        width = 600 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-bar")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", "100%")
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -157,9 +157,11 @@ function createBarChart(data) {
 function createWordCloud(data) {
     const words = data.map(d => d.text.split(" ")).flat();
     const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
-        .map(([word, freq]) => ({ text: word, size: freq }));
+        .map(([word, freq]) => ({ text: word, size: freq }))
+        .sort((a, b) => b.size - a.size)
+        .slice(0, 20); // Only take the top 20 most frequent words
 
-    const width = 960, height = 500;
+    const width = 800, height = 500;
 
     const layout = d3.layout.cloud()
         .size([width, height])
@@ -175,7 +177,7 @@ function createWordCloud(data) {
     function draw(words) {
         d3.select("#word-cloud")
             .append("svg")
-            .attr("width", width)
+            .attr("width", "100%")
             .attr("height", height)
             .append("g")
             .attr("transform", `translate(${width / 2}, ${height / 2})`)
@@ -193,12 +195,12 @@ function createWordCloud(data) {
 
 function createScatterPlot(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 960 - margin.left - margin.right,
+        width = 600 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-scatter")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", "100%")
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -231,12 +233,12 @@ function createScatterPlot(data) {
 
 function createHeatmap(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 960 - margin.left - margin.right,
+        width = 600 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-heatmap")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", "100%")
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);

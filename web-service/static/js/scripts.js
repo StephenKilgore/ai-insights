@@ -4,26 +4,13 @@ async function fetchData() {
     return data;
 }
 
-fetchData().then(data => {
-    if (data && Array.isArray(data)) {
-        createPieChart(data);
-        createLineChart(data);
-        createBarChart(data);
-        createWordCloud(data);
-        createScatterPlot(data);
-        createHeatmap(data);
-        displayExampleTweets(data);
-    } else {
-        console.error("Invalid data format:", data);
-    }
-});
-
 const color = d3.scaleOrdinal()
     .domain(['positive', 'negative', 'neutral'])
     .range(['#8FB339', '#E94B3C', '#6E7E85']); // Muted colors
 
 function createPieChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
+    const total = d3.sum(Array.from(sentimentCounts.values()));
 
     const width = 500, height = 500, radius = Math.min(width, height) / 2;
 
@@ -42,8 +29,7 @@ function createPieChart(data) {
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', d => color(d.data[0]))
-        .each(function(d) { this._current = d; });
+        .attr('fill', d => color(d.data[0]));
 
     svg.selectAll('text')
         .data(pie(Array.from(sentimentCounts)))
@@ -52,17 +38,17 @@ function createPieChart(data) {
         .attr('transform', d => `translate(${arc.centroid(d)})`)
         .attr('dy', '0.35em')
         .style('text-anchor', 'middle')
-        .text(d => `${d.data[0]}: ${(d.data[1] / data.length * 100).toFixed(1)}%`);
+        .text(d => `${d.data[0]}: ${(d.data[1] / total * 100).toFixed(1)}%`);
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${width / 2 - 80}, ${-height / 2 + 20})`);
+        .attr("transform", `translate(${width / 2 + 20}, ${-height / 2})`);
 
     legend.selectAll("rect")
         .data(sentimentCounts.keys())
         .enter()
         .append("rect")
         .attr("x", 0)
-        .attr("y", (d, i) => i * 20)
+        .attr("y", (d, i) => 20 + i * 20)
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", d => color(d));
@@ -72,8 +58,47 @@ function createPieChart(data) {
         .enter()
         .append("text")
         .attr("x", 20)
-        .attr("y", (d, i) => i * 20 + 9)
+        .attr("y", (d, i) => 20 + i * 20 + 9)
         .text(d => d);
+}
+
+function createWordCloud(data) {
+    const words = data.map(d => d.text.split(" ")).flat();
+    const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
+        .map(([word, freq]) => ({ text: word, size: freq }))
+        .sort((a, b) => b.size - a.size)
+        .slice(0, 20);
+
+    const width = 600, height = 400;
+
+    const layout = d3.layout.cloud()
+        .size([width, height])
+        .words(frequency)
+        .padding(5)
+        .rotate(() => ~~(Math.random() * 2) * 90)
+        .font("Impact")
+        .fontSize(d => d.size)
+        .on("end", draw);
+
+    layout.start();
+
+    function draw(words) {
+        d3.select("#word-cloud")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", `translate(${width / 2}, ${height / 2})`)
+            .selectAll("text")
+            .data(words)
+            .enter()
+            .append("text")
+            .style("font-size", d => `${d.size}px`)
+            .style("font-family", "Impact")
+            .attr("text-anchor", "middle")
+            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+            .text(d => d.text);
+    }
 }
 
 function createLineChart(data) {
@@ -81,7 +106,7 @@ function createLineChart(data) {
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 },
         width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        height = 400 - margin.top - margin.bottom;
 
     const x = d3.scaleTime()
         .domain(d3.extent(sentimentByDate.keys()))
@@ -93,7 +118,7 @@ function createLineChart(data) {
 
     const svg = d3.select("#sentiment-line")
         .append("svg")
-        .attr("width", "100%")
+        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -121,12 +146,12 @@ function createBarChart(data) {
     const sentimentCounts = d3.rollup(data, v => v.length, d => d.sentiment_text);
 
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-bar")
         .append("svg")
-        .attr("width", "100%")
+        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -154,53 +179,14 @@ function createBarChart(data) {
         .attr("fill", d => color(d[0]));
 }
 
-function createWordCloud(data) {
-    const words = data.map(d => d.text.split(" ")).flat();
-    const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
-        .map(([word, freq]) => ({ text: word, size: freq }))
-        .sort((a, b) => b.size - a.size)
-        .slice(0, 20); // Only take the top 20 most frequent words
-
-    const width = 800, height = 500;
-
-    const layout = d3.layout.cloud()
-        .size([width, height])
-        .words(frequency)
-        .padding(5)
-        .rotate(() => ~~(Math.random() * 2) * 90)
-        .font("Impact")
-        .fontSize(d => d.size)
-        .on("end", draw);
-
-    layout.start();
-
-    function draw(words) {
-        d3.select("#word-cloud")
-            .append("svg")
-            .attr("width", "100%")
-            .attr("height", height)
-            .append("g")
-            .attr("transform", `translate(${width / 2}, ${height / 2})`)
-            .selectAll("text")
-            .data(words)
-            .enter()
-            .append("text")
-            .style("font-size", d => `${d.size}px`)
-            .style("font-family", "Impact")
-            .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-            .text(d => d.text);
-    }
-}
-
 function createScatterPlot(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-scatter")
         .append("svg")
-        .attr("width", "100%")
+        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -233,12 +219,12 @@ function createScatterPlot(data) {
 
 function createHeatmap(data) {
     const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = 460 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select("#sentiment-heatmap")
         .append("svg")
-        .attr("width", "100%")
+        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -299,3 +285,17 @@ function displayExampleTweets(data) {
         d3.select("#neutral-tweets").append("div").attr("class", "tweet-box").text(tweet.text);
     });
 }
+
+fetchData().then(data => {
+    if (data && Array.isArray(data)) {
+        createPieChart(data);
+        createLineChart(data);
+        createBarChart(data);
+        createWordCloud(data);
+        createScatterPlot(data);
+        createHeatmap(data);
+        displayExampleTweets(data);
+    } else {
+        console.error("Invalid data format:", data);
+    }
+});

@@ -270,9 +270,14 @@ function createHeatmap(data) {
 }
 
 function displayExampleTweets(data) {
-    const positiveTweets = data.filter(d => d.sentiment_text === 'positive').slice(0, 5);
-    const negativeTweets = data.filter(d => d.sentiment_text === 'negative').slice(0, 5);
-    const neutralTweets = data.filter(d => d.sentiment_text === 'neutral').slice(0, 5);
+    const getRandomTweets = (tweets, count) => {
+        const shuffled = tweets.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    };
+
+    const positiveTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'positive').sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude), 5);
+    const negativeTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'negative').sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude), 5);
+    const neutralTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'neutral'), 5);
 
     positiveTweets.forEach(tweet => {
         d3.select("#positive-tweets").append("div").attr("class", "tweet-box").text(tweet.text);

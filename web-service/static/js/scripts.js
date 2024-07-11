@@ -161,7 +161,7 @@ function createWordCloud(data) {
 
     const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 20)
+        .slice(0, 100)
         .map(([word, freq]) => ({ text: word, size: freq }));
 
     const width = 600, height = 400;

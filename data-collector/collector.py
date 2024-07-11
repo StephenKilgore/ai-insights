@@ -86,7 +86,7 @@ def process_job():
     last_job_end_time = get_last_job_end_date("data-collector")
 
     bearer_token = init()
-    tweets = get_tweets(10, bearer_token, last_job_end_time.strftime('%Y-%m-%dT%H:%M:%SZ') if last_job_end_time else None)
+    tweets = get_tweets(200, bearer_token, last_job_end_time.strftime('%Y-%m-%dT%H:%M:%SZ') if last_job_end_time else None)
 
     connection = pika.BlockingConnection(pika.ConnectionParameters(
         host=os.getenv('RABBITMQ_HOST'),

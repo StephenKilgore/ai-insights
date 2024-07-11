@@ -140,9 +140,25 @@ function createBarChart(data) {
 }
 
 function createWordCloud(data) {
+    const stopWords = new Set([
+        "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours",
+        "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself",
+        "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which",
+        "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be",
+        "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an",
+        "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by",
+        "for", "with", "about", "against", "between", "into", "through", "during", "before",
+        "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over",
+        "under", "again", "further", "then", "once", "here", "there", "when", "where", "why",
+        "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such",
+        "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can",
+        "will", "just", "don", "should", "now"
+    ]);
+
     const words = data.flatMap(d => d.text.split(" "))
         .map(word => word.toLowerCase().replace(/[^a-zA-Z0-9]/g, ''))
-        .filter(word => word.length > 2);
+        .filter(word => word.length > 2 && !stopWords.has(word));
+
     const frequency = Array.from(d3.rollup(words, v => v.length, d => d))
         .sort((a, b) => b[1] - a[1])
         .slice(0, 20)
@@ -156,7 +172,7 @@ function createWordCloud(data) {
         .padding(5)
         .rotate(() => ~~(Math.random() * 2) * 90)
         .font("Impact")
-        .fontSize(d => d.size * 5)  // Adjust the size multiplier as needed
+        .fontSize(d => d.size * 10)  // Adjust the size multiplier as needed
         .on("end", draw);
 
     layout.start();
@@ -270,14 +286,15 @@ function createHeatmap(data) {
 }
 
 function displayExampleTweets(data) {
-    const getRandomTweets = (tweets, count) => {
-        const shuffled = tweets.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
-    };
-
-    const positiveTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'positive').sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude), 5);
-    const negativeTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'negative').sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude), 5);
-    const neutralTweets = getRandomTweets(data.filter(d => d.sentiment_text === 'neutral'), 5);
+    const positiveTweets = data.filter(d => d.sentiment_text === 'positive')
+        .sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude)
+        .slice(0, 5);
+    const negativeTweets = data.filter(d => d.sentiment_text === 'negative')
+        .sort((a, b) => b.sentiment_magnitude - a.sentiment_magnitude)
+        .slice(0, 5);
+    const neutralTweets = data.filter(d => d.sentiment_text === 'neutral')
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5);
 
     positiveTweets.forEach(tweet => {
         d3.select("#positive-tweets").append("div").attr("class", "tweet-box").text(tweet.text);

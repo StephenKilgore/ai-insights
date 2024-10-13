@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_smorest import Api
 from resources.job import blp as JobBlueprint
 from resources.message import blp as MessageBlueprint
+from resources.metric import blp as MetricBlueprint
 
 from db import db
 import os
@@ -38,6 +39,7 @@ def create_app():
 
     api.register_blueprint(JobBlueprint)
     api.register_blueprint(MessageBlueprint)
+    api.register_blueprint(MetricBlueprint)
     return app
 
 

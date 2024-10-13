@@ -21,3 +21,12 @@ class Metric(MethodView):
         avg_messages_per_job = total_messages / total_jobs
         avg_job_runtime = db.session.query(func.avg(job.runtime)).scalar()
         last_job_run_date = db.session.query(func.max(job.job_end_date)).scalar()
+
+        return {
+            "total_messages": total_messages,
+            "total_jobs": total_jobs,
+            "jobs_with_failed_rows": jobs_with_failed_rows,
+            "avg_messages_per_job": avg_messages_per_job,
+            "avg_job_runtime": avg_job_runtime,
+            "last_job_run_date": last_job_run_date
+        }

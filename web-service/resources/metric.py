@@ -10,4 +10,10 @@ blp = Blueprint("metrics", __name__, description="Operations on metrics")
 class Metric(MethodView):
     @blp.response(200, MetricSchema())
     def get(self):
-        return {"test": "test"}
+        return {
+            "successful_jobs": 1,
+            "failed_jobs": 0,
+            "total_processed_tweets": 20,
+            "last_job_runtime": "",
+            "last_job_status": "complete"
+        }

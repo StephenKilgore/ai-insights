@@ -14,6 +14,5 @@ class Metric(MethodView):
             "successful_jobs": 1,
             "failed_jobs": 0,
             "total_processed_tweets": 20,
-            "last_job_runtime": "",
             "last_job_status": "complete"
         }

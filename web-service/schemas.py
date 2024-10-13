@@ -27,6 +27,5 @@ class MetricSchema(Schema):
     successful_jobs = fields.Int()
     failed_jobs = fields.Int()
     total_processed_tweets = fields.Int()
-    last_job_runtime = fields.DateTime()
     last_job_status = fields.String()
 

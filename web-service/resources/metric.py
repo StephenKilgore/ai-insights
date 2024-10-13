@@ -4,7 +4,7 @@ from db import db
 from schemas import MetricSchema
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import func
-from models import message, job
+from models import MessageModel, JobModel
 
 blp = Blueprint("metrics", __name__, description="Operations on metrics")
 

@@ -24,8 +24,10 @@ class JobSchema(Schema):
     messages = fields.List(fields.Nested(MessageSchema(), dump_only=True))
 
 class MetricSchema(Schema):
-    successful_jobs = fields.Int()
-    failed_jobs = fields.Int()
-    total_processed_tweets = fields.Int()
-    last_job_status = fields.String()
+    total_messages = fields.Int()
+    total_jobs = fields.Int()
+    jobs_with_failed_rows = fields.Int()
+    avg_messages_per_job = fields.Float()
+    avg_job_runtime = fields.Float()
+    last_job_run_date = fields.DateTime()
 

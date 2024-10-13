@@ -5,6 +5,7 @@ from models import JobModel
 from schemas import JobSchema
 from sqlalchemy.exc import SQLAlchemyError
 
+
 blp = Blueprint("jobs", __name__, description="Operations on jobs")
 
 @blp.route("/api/job")

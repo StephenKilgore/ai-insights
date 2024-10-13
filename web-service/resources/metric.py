@@ -1,8 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from db import db
-from models import JobModel
-from schemas import JobSchema
+from schemas import MetricSchema
 from sqlalchemy.exc import SQLAlchemyError
 
 blp = Blueprint("metrics", __name__, description="Operations on metrics")

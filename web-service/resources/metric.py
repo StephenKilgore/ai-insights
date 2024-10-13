@@ -12,9 +12,6 @@ blp = Blueprint("metrics", __name__, description="Operations on metrics")
 class Metric(MethodView):
     @blp.response(200, MetricSchema())
     def get(self):
-        return get_metrics()
-
-    def get_metrics(self):
         total_messages = db.session.query(func.count(message.id)).scalar()
         total_jobs = db.session.query(func.count(job.id)).scalar()
         jobs_with_failed_rows = db.session.query(func.count(job.id)).filter(job.rows_failed > 0).scalar()

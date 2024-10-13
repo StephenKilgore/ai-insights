@@ -9,5 +9,5 @@ blp = Blueprint("metrics", __name__, description="Operations on metrics")
 @blp.route("/api/metrics")
 class Metric(MethodView):
     @blp.response(200, MetricSchema())
-    def get(self, job_id):
-        return "test"
+    def get(self):
+        return {"test": "test"}

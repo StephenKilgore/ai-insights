@@ -28,6 +28,6 @@ class MetricSchema(Schema):
     total_jobs = fields.Int()
     jobs_with_failed_rows = fields.Int()
     avg_messages_per_job = fields.Float()
-    avg_job_runtime = fields.Float()
+    avg_job_runtime_in_ms = fields.Float()
     last_job_run_date = fields.DateTime()
 
